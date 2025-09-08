@@ -41,21 +41,21 @@ def calculate_money():
     return total
 
 def check_resources(coffee_type):
+    total = calculate_money()
     for item in MENU[coffee_type]["ingredients"]:
-        if MENU[coffee_type]["ingredients"] > RESOURCES[item]:
+        if MENU[coffee_type]["ingredients"][item] > RESOURCES[item]:
             print(f"Sorry there is not enough {item}.")
             return False
-        else:
-            if calculate_money() >= MENU[coffee_type]["cost"]:
-                print(f"Here is ${calculate_money() - MENU[coffee_type]['cost']} in change.")
-                print(f"Here is your {coffee_type} ☕️. Enjoy!")
-                for item in MNEU[coffee_type]["ingredients"]:
-                    RESOURCES[item] -= MENU[coffee_type]["ingredients"][item]
-            else:
-                print("Sorry that's not enough money. Money refunded.")
-                return False
+    if total < MENU[coffee_type]["cost"]:
+        print("Sorry that's not enough money. Money refunded.")
+        return False
+    else:
+        for item in MENU[coffee_type]["ingredients"]:
+            RESOURCES[item] -= MENU[coffee_type]["ingredients"][item]
+        change = total - MENU[coffee_type]["cost"]
+        print(f"Here is ${change:.2f} in change.")
+        print(f"Here is your {coffee_type} ☕️. Enjoy!")
     return True
-            
 
 def report():
     print(f"Water: {RESOURCES['water']}ml")
@@ -75,12 +75,9 @@ def ask():
             check_resources(ask)
             continue_coffee = False
             
-ask()
-        
-# TODO1: Print report of all coffee machine
+def main():
+    while True:
+        ask()
+if __name__ == "__main__":
+    main()
 
-# TODO2: Check resources sufficient?
-
-# TODO3: Process coins
-
-#TODO4: Check transaction successful?
