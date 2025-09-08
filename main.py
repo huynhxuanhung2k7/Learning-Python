@@ -23,7 +23,7 @@ MENU = {
         "cost": 3.0,
     }
 }
-
+print((MENU["espresso"]["ingredients"]))
 
 RESOURCES = {
     "water": 300,
@@ -31,19 +31,52 @@ RESOURCES = {
     "coffee": 100,
 }
 
+def calculate_money():
+    print("Please insert coins.")
+    quarters = int(input("how many quarters?: ")) * 0.25
+    dimes = int(input("how many dimes?: ")) * 0.10          
+    nickels = int(input("how many nickels?: ")) * 0.05
+    pennies = int(input("how many pennies?: ")) * 0.01
+    total = quarters + dimes + nickels + pennies 
+    return total
+
+def check_resources(coffee_type):
+    for item in MENU[coffee_type]["ingredients"]:
+        if MENU[coffee_type]["ingredients"] > RESOURCES[item]:
+            print(f"Sorry there is not enough {item}.")
+            return False
+        else:
+            if calculate_money() >= MENU[coffee_type]["cost"]:
+                print(f"Here is ${calculate_money() - MENU[coffee_type]['cost']} in change.")
+                print(f"Here is your {coffee_type} ☕️. Enjoy!")
+                for item in MNEU[coffee_type]["ingredients"]:
+                    RESOURCES[item] -= MENU[coffee_type]["ingredients"][item]
+            else:
+                print("Sorry that's not enough money. Money refunded.")
+                return False
+    return True
+            
+
 def report():
     print(f"Water: {RESOURCES['water']}ml")
     print(f"Milk: {RESOURCES['milk']}ml")
     print(f"Coffee: {RESOURCES['coffee']}g")
-    print(f"Money: ${RESOURCES['cost']}")
 
 
 def ask():
-    ask = input("What would you like? (espresso/latte/cappuccino): ")
-    if ask == "off": 
-        quit()
-    elif ask == "report":
-        report()
+    continue_coffee = True
+    while continue_coffee:
+        ask = input("What would you like? (espresso/latte/cappuccino): ")
+        if ask == "off": 
+            quit()
+        elif ask == "report":
+            report()
+        elif ask in MENU:
+            check_resources(ask)
+            continue_coffee = False
+            
+ask()
+        
 # TODO1: Print report of all coffee machine
 
 # TODO2: Check resources sufficient?
